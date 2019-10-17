@@ -12,11 +12,14 @@
 
 /////////////// Library Interface Description //////////////
 class Lib {
-	// Public functions available to Main.ino
-public:
+public:  // Public functions available to Main.ino
+	void Blink(unsigned short);
+	void Tone(int, int);
+	void ReadDist(void);
+	void FiltUpdate(void);
 
-	// Private functions and variables only available inside library
-private:
+private: // Private functions and variables only available inside library
+	float Temp; // Variable to hold a temporary value while swapping array elements
 
 };
 #endif
