@@ -52,7 +52,7 @@ void Lib::ReadDist(float*)
 }
 
 // PUBLIC: FiltUpdate:: Updates the filtered distances using an exponential moving average filter
-void FiltUpdate(float*)
+void Lib::FiltUpdate(float*)
 {
 	// Update left filter
 
