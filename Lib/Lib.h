@@ -18,7 +18,9 @@
 #define PushButton        7   // Input from the pushbutton -> Push button is pressed when this pin is LOW
 
 // Constants
-
+#define FlashDelay        500 // The time between high and low states of the LED
+#define DebounceDelay     50  // The time between interval used to debounce the switch
+#define EMA_Alpha         0.5 // The weight for our exponential moving average filter. Note: Must be in open interval (0,1). Higher value means filter forgets past values faster 
 
 /////////////// Library Interface Description //////////////
 class Lib {
@@ -29,13 +31,14 @@ public:  // Public functions and variables available to Main.ino
 	void ReadDist(float*);                          // Function to read the distance from the two ultrasonic sensors
 	void FiltUpdate(float*);                        // Function to update the filtered distances
 	void Begin(void);                               // Function to initialize the MCU
+	bool ReadButton(void);                          // Function to read the state of the push button (1 when button pressed)
 
 	// Variable Declarations
 	float RawDist[4];                               // Stores raw distances:: Format: [Past Left, Past Right, Current Left, Current Right]
 	float FiltDist[2];                              // Stores the filtered distances:: Format: [Left Filtered, Right Filtered]
 
 private: // Private functions and variables only available inside library
-	float Temp; // Variable to hold a temporary value while swapping array elements
-
+	float Temp;                                     // Variable to hold a temporary value while swapping array elements
+	bool  State;                                    // Variable to store the state of the push button
 };
 #endif

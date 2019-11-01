@@ -12,6 +12,7 @@ DistToTone :: This function converts distances on each side to tones
 ReadDist   :: This function reads the distance on each ultrasonic sensor
 FiltUpdate :: This function updates the state of the filter
 Begin      :: This function initializes the MCU 
+ReadButton :: This function reads the state of the push button
 
 Code Contributors:
 Swagat, Cameron, Landon, Derek

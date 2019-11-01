@@ -9,29 +9,42 @@ Lib::Lib(void) {
 /////////////////////////////////////////////////////////////
 
 // PUBLIC: Begin:: Performs initialization actions
-void Lib::Begin(void)
+void Lib::Begin(float RawDist[], float FiltDist[])
 {
 	// Initialize the IO pins
-
+	pinMode(UltrasonicTrigger, OUTPUT); digitalWrite(UltrasonicTrigger, LOW);
+	pinMode(LeftUltrasonic, INPUT); pinMode(RightUltrasonic, INPUT);
+	pinMode(RightSpeaker, OUTPUT); digitalWrite(RightSpeaker, LOW);
+	pinMode(LeftSpeaker, OUTPUT); digitalWrite(LeftSpeaker, LOW);
+	pinMode(LEDPin, OUTPUT); digitalWrite(LEDPin, LOW);
+	pinMode(PushButton, INPUT);
 
 	// Initialize global state variables
-
-
+	for (byte i = 0; i < 4; i++) {
+		RawDist[i] = 0.0;
+	}
+	for (byte i = 0; i < 2; i++) {
+		FiltDist[i] = 0.0;
+	}
 }
 
 // PUBLIC: Blink:: Function to blink the LED	
-void Lib::Blink(unsigned short)
+void Lib::Blink(byte Loops)
 {
 	// Start loop
+	for (byte i = 0; i < Loops; i++) {
+		// Turn on LED and Wait
+		digitalWrite(LEDPin, HIGH);
+		delay(FlashDelay);
 
-	// Turn on LED and Wait
-
-	// Turn off LED and Wait
-
+		// Turn off LED and Wait
+		digitalWrite(LEDPin, LOW);
+		delay(FlashDelay);
+	}
 }
 
 // PUBLIC: DistToTone:: Function to output tones through each speaker given distance readings.
-void Lib::DistToTone(float*)
+void Lib::DistToTone(float FiltDist[])
 {
 	// Map Distances to Frequencies
 
@@ -39,25 +52,42 @@ void Lib::DistToTone(float*)
 }
 
 // PUBLIC: ReadDist:: Reads the distance from two LV-MaxSonar EZ1 sensors wired in sequential read mode
-void Lib::ReadDist(float*)
+void Lib::ReadDist(float RawDist[])
 {
 	// Query the sensors and wait ~50 ms
 
-	// Read from the left sensor, take timestamp, and wait ~50 ms
 
-	// Read from the right sensor and take timestamp
+	// Read from the left sensor (Analog Pin), take timestamp, and wait ~50 ms
+
+
+	// Read from the right sensor (Analog Pin) and take timestamp
+
 
 	// Modify the distance and timestamp arrays
 
 }
 
 // PUBLIC: FiltUpdate:: Updates the filtered distances using an exponential moving average filter
-void Lib::FiltUpdate(float*)
+void Lib::FiltUpdate(float RawDist[], float FiltDist[])
 {
-	// Update left filter
+	for (byte i = 0; i < 2; i++) {
+		// Compute filter update
+		Temp = EMA_Alpha * RawDist[i] + (1.0 - EMA_Alpha)*FiltDist[i];
 
+		// Assign filter update
+		FiltDist[i] = Temp;
+	}
+}
 
-	// Update right filter
-
-
+// PUBLIC: ReadButton:: Reads the state of the button
+bool Lib::ReadButton(void)
+{
+	// This will return true when the button is pressed (when the button pin is low)
+	if (digitalRead(Push_1)) {      // If pin is pulled high...
+		State = false;              // Then  the switch has been pressed
+	}else {                         // Otherwise...
+		State = true;               // The switch has not been pressed
+	}
+	delay(DebounceDelay);           // Wait a bit to avoid multiple false presses
+	return State;
 }
